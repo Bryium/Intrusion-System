@@ -19,7 +19,7 @@ class PacketCapture:
             store=0,
             stop_filter=lambda _: self.stop_capture.is_set())
 
-    self.capture_thread = threading = threading.Thread(target=capture_thread)
+    self.capture_thread = threading.Thread(target=capture_thread)
     self.capture_thread.start()
 
   def stop(self):

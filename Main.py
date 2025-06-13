@@ -4,45 +4,50 @@ from Detection_Engine import DetectionEngine
 from Alert_System import AlertSystem
 from scapy.all import IP, TCP
 import queue
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 
 class IntrusionDetectionSystem:
-  def __init__(self, interface="eth0"):
-    self.Packet_Capture = PacketCapture()
-    self.Traffic_Analyzer = TrafficAnalyzer()
-    self.Detection_Engine = DetectionEngine()
-    self.Alert_System = AlertSystem()
+    def __init__(self, interface):
+        self.interface         = interface
+        self.packet_capture    = PacketCapture()
+        self.traffic_analyzer  = TrafficAnalyzer()
+        self.detection_engine  = DetectionEngine()
+        self.alert_system      = AlertSystem()
 
-  def start(self):
-    print(f"starting IDS on interface {self.interface}")
-    self.Packet_Capture.start_capture(self.interface)
+    def start(self):
+        print(f"Starting IDS on interface {self.interface}")
+        self.packet_capture.start_capture(self.interface)
 
-    while True:
-      try:
-        packet = self.Packet_Capture.packet_queue.get(timeout=1)
-        features = self.Traffic_Analyzer.analyze_packet(packet)
+        while True:
+            try:
+                packet = self.packet_capture.packet_queue.get(timeout=1)
+                features = self.traffic_analyzer.analyze_packet(packet)
+                if features:
+                    threats = self.detection_engine.detect_threats(features)
+                    for threat in threats:
+                        pkt_info = {
+                            'source_ip'      : packet[IP].src,
+                            'destination_ip' : packet[IP].dst,
+                            'source_port'    : packet[TCP].sport,
+                            'destination_port': packet[TCP].dport
+                        }
+                        self.alert_system.generate_alert(threat, pkt_info)
 
-        if features:
-          threats = self.Detection_Engine.detect_threats(features)
+            except queue.Empty:
+                continue
+            except KeyboardInterrupt:
+                print("Stopping IDS…")
+                self.packet_capture.stop()
+                break
 
-          for threat in threats:
-            packet_info = {
-              'source_ip' : packet[IP].src,
-              'destination_ip': packet[IP].dst,
-              'source_port': packet[TCP].sport,
-              'destination_port': packet[TCP].dport
-            }
-
-            self.Alert_System.generate_alert(threat, packet_info)
-
-      except queue.Empty:
-        continue
-      except KeyboardInterrupt:
-        print("Stopping IDS..")
-        self.packet_capture.stop()
-        break
-__name__ == "__main__":
-ids = IntrusionDetectionSystem()
-ids.start()
-
-
-
+if __name__ == "__main__":
+    interface = os.getenv("INTERFACE")
+    if not interface:
+        raise ValueError("INTERFACE not set in .env file")
+    
+    ids = IntrusionDetectionSystem(interface=interface)
+    ids.start()

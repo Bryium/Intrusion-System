@@ -27,7 +27,7 @@ class DetectionEngine:
     threats = []
 
     #signature-based detection
-    for rule_name. rule in self.signature_rules.items():
+    for rule_name, rule in self.signature_rules.items():
       if rule['condition'](features):
         threats.append({
           'type':'signature',

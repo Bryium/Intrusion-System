@@ -12,7 +12,7 @@ class TrafficAnalyzer:
       'last_time': None
     })
 
-  def anaylze_packet(self, packet):
+  def analyze_packet(self, packet):
     if IP in packet and TCP in packet:
       ip_src = packet[IP].src
       ip_dst = packet[IP].dst
@@ -34,11 +34,19 @@ class TrafficAnalyzer:
       return self.extract_features(packet, stats)
     
   def extract_features(self, packet, stats):
+    time_diff = stats['last_time'] - stats['start_time']
+    if time_diff == 0:
+        time_diff = 1  
+
+  
+    tcp_flags = packet[TCP].flags if TCP in packet else None
+
     return {
-      'packet_size':len(packet),
-      'flow_duration' : stats['last_time'] - stats['start_time'],
-      'packet_rate': stats['packet_count'] / (stats['last_time'] - stats['start-time']),
-      'byte_rate' : stats['byte_count'] / (stats['last_time'] - stats['start-time']),
-      'tcp_flags' :packet[TCP].flags,
-      'window_size' :packet[TCP].window
-    } 
+        'packet_size': len(packet),
+        'packet_rate': stats['packet_count'] / time_diff,
+        'byte_rate': stats['byte_count'] / time_diff,
+        'tcp_flags': tcp_flags,
+    }
+
+    
+ 

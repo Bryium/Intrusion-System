@@ -7,3 +7,9 @@ myenv/
 
 # Ignore the IDS alert log file
 ids_alert.log
+
+# Ignore MockDetectionEngine for mock data
+MockDetection_Engine.py
+
+#Ignore the Main1 test file for mock data
+main1.py

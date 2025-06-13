@@ -1,6 +1,6 @@
 ﻿# 🔐 Hybrid Intrusion Detection System (IDS)
 
-A Python-based Intrusion Detection System combining **signature-based** and **anomaly-based** detection to monitor network traffic in real-time.
+A Real time based Intrusion Detection System combining **signature-based** and **anomaly-based** detection to monitor network traffic in real-time.
 
 ## 🚀 Features
 

@@ -1,7 +1,9 @@
-/myenv
 
-myenv. 
-
+# Ignore the virtual environment
 myenv/
 
-.env/
+# Ignore the environment variables
+.env
+
+# Ignore the IDS alert log file
+ids_alert.log

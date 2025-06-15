@@ -49,7 +49,7 @@ if __name__ == "__main__":
     if not interface:
         raise ValueError("INTERFACE not set in .env file")
     
-    # Fix any double backslashes
+    
     interface = interface.replace('\\\\', '\\')
 
     print(f"Using interface: {interface!r}")

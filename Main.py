@@ -27,7 +27,7 @@ class IntrusionDetectionSystem:
                 packet = self.packet_capture.packet_queue.get(timeout=1)
                 features = self.traffic_analyzer.analyze_packet(packet)
                 if features:
-                    threats = self.detection_engine.detect_threats(features)
+                    threats = self.detection_engine.detect_threat(features)
                     for threat in threats:
                         pkt_info = {
                             'source_ip'      : packet[IP].src,

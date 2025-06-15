@@ -13,3 +13,9 @@ MockDetection_Engine.py
 
 #Ignore the Main1 test file for mock data
 main1.py
+
+#Ignore Model training code
+train_model.py
+
+#Ignore Kera model
+my_model.keras
